@@ -21,7 +21,7 @@ server:
   port: 8080
   servlet:
     # 应用的访问路径
-    context-path: /
+    context-path: /ruoyi
   tomcat:
     # tomcat的URI编码
     uri-encoding: UTF-8
@@ -65,7 +65,7 @@ spring:
     # 数据库索引
     database: 0
     # 密码
-    password: 
+    password: 123456
     # 连接超时时间
     timeout: 10s
     lettuce:
