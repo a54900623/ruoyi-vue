@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.erp.mapper.warehouse.WarehouseMapper">
+
+    <resultMap id="warehouseMap" type="com.ruoyi.erp.domain.warehouse.Warehouse">
+        <id column="id" property="id" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="name" column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="number" column="number" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result column="status" property="status" jdbcType="CHAR" javaType="java.lang.Integer"/>
+
+        <result property="createBy" column="create_by" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+    </resultMap>
+
+    <sql id="warehouseSql">
+        `id`, `name`, `number`, status, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="get" parameterType="java.lang.String" resultMap="warehouseMap">
+        select
+        <include refid="warehouseSql"/>
+        from erp_warehouse where id = #{id}
+    </select>
+
+    <select id="getUnique" parameterType="com.ruoyi.erp.domain.warehouse.Warehouse" resultMap="warehouseMap">
+        select
+        <include refid="warehouseSql"/>
+        from erp_warehouse
+        <where>
+            <if test="number != null and number != ''">
+                AND `number` = #{number}
+            </if>
+            <if test="name != null and name != ''">
+                AND `name` = #{name}
+            </if>
+            <if test="id != null and id != ''">
+                AND `id` != #{id}
+            </if>
+        </where>
+        limit 0,1
+    </select>
+
+    <select id="list" parameterType="com.ruoyi.erp.domain.warehouse.Warehouse" resultMap="warehouseMap">
+        select
+        <include refid="warehouseSql"/>
+        from erp_warehouse
+        <where>
+            <if test="number != null and number != ''">
+                AND `number` like concat('%', #{number}, '%')
+            </if>
+            <if test="name != null and name != ''">
+                AND `name` like concat('%', #{name}, '%')
+            </if>
+            <if test="params != null and params.size > 0">
+                <!-- 创建时间 时间块 -->
+                <if test="params.beginTime != null and params.endTime != null">
+                    AND (DATE_FORMAT(create_time, '%Y-%m-%d') between #{params.beginTime} and #{params.endTime})
+                </if>
+                <!--&lt;!&ndash; 创建时间 时间段 &ndash;&gt;
+                <if test="params.beginTime != null and params.beginTime != '' and params.endTime == ''">
+                    AND TO_DAYS(create_time) &gt;= TO_DAYS(#{params.beginTime})
+                </if>
+                <if test="params.endTime != null and params.endTime != '' and params.beginTime == ''">
+                    AND TO_DAYS(create_time) &lt;= TO_DAYS(#{params.endTime})
+                </if>-->
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="conditionList" parameterType="com.ruoyi.erp.domain.warehouse.Warehouse" resultMap="warehouseMap">
+        select
+        <include refid="warehouseSql"/>
+        from erp_warehouse
+        <where>
+            <if test="model.number != null and model.number != ''">
+                AND `number` like concat('%', #{model.number}, '%')
+            </if>
+            <if test="model.name != null and model.name != ''">
+                AND `name` like concat('%', #{model.name}, '%')
+            </if>
+            <if test="params != null and params.size > 0">
+
+            </if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <insert id="insert" parameterType="com.ruoyi.erp.domain.warehouse.Warehouse" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO erp_warehouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="name != null">`name`,</if>
+            <if test="number != null">`number`,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=VARCHAR},</if>
+            <if test="createBy != null">#{createBy,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateBy != null">#{updateBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="name != null">#{name,jdbcType=VARCHAR},</if>
+            <if test="number != null">#{number,jdbcType=VARCHAR},</if>
+            <if test="status != null">#{status,jdbcType=INTEGER},</if>
+        </trim>
+    </insert>
+
+    <update id="update">
+        UPDATE erp_warehouse
+        <set>
+            <if test="updateBy != null">update_by = #{updateBy,jdbcType=VARCHAR},</if>
+            <if test="updateTime != null">update_time = sysdate(),</if>
+            <if test="name != null">`name` = #{name,jdbcType=VARCHAR},</if>
+            <if test="number != null">`number` = #{number,jdbcType=VARCHAR},</if>
+            <if test="status != null">status = #{status,jdbcType=INTEGER},</if>
+        </set>
+        WHERE id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete
+        from erp_warehouse
+        where id = #{id}
+    </delete>
+
+    <delete id="batchDelete" parameterType="java.util.Set">
+        delete from erp_warehouse where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
