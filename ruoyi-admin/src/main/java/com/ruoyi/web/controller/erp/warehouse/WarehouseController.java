@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.erp;
+package com.ruoyi.web.controller.erp.warehouse;
 
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.annotation.RepeatSubmit;
@@ -8,7 +8,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.erp.domain.warehouse.Warehouse;
 import com.ruoyi.erp.service.warehouse.IWarehouseService;
-import com.ruoyi.web.biz.WarehouseBiz;
+import com.ruoyi.web.biz.warehouse.WarehouseBiz;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * 仓库
+ * @author 10525
  */
 @RestController
 @RequestMapping("/erp/warehouse")
@@ -44,7 +45,11 @@ public class WarehouseController extends BaseController {
     }
 
     /**
-     * 根据参数编号获取详细信息
+     * @param warehouseId 仓库id
+     * @return com.ruoyi.common.core.domain.AjaxResult
+     * @author 10525
+     * @date 2021/6/7 14:10
+     * description 根据参数编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('warehouseBus:warehouse:query')")
     @GetMapping(value = "/{warehouseId}")

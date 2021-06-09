@@ -1,4 +1,4 @@
-package com.ruoyi.web.biz;
+package com.ruoyi.web.biz.warehouse;
 
 import com.ruoyi.common.enums.YesNoStatus;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -9,17 +9,20 @@ import com.ruoyi.erp.service.warehouse.IWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author 10525
+ */
 @Service
 public class WarehouseBiz {
     @Autowired
     private IWarehouseService warehouseService;
 
     /**
-     * 保存或更新仓库信息
-     *
      * @param warehouse
-     * @return
-     * @throws Exception
+     * @return boolean
+     * @author 10525
+     * @date 2021/6/7 14:11
+     * description 保存或新增仓库信息
      */
     public boolean insertOrUpdateWarehouse(Warehouse warehouse) throws Exception {
         try {
